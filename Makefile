@@ -17,7 +17,7 @@ $(OBJ_DIR)/%.o: %.c
 all: cimgui mlx $(NAME)
 
 cimgui:
-	@make -C cimgui -j12
+	@make -f cimgui.mk -j12
 
 mlx:
 	@make -C MacroLibX -j12
