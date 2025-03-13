@@ -121,16 +121,6 @@ int main(void)
 		init_info.RenderPass = renderpass;
 	ImGui_ImplVulkan_Init(&init_info);
 
-	mlx_clear_window(mlx, win, (mlx_color){ .rgba = 0x334D4DFF });
-
-	uint32_t color = 0;
-	for(int j = 0; j < 400; j++)
-	{
-		mlx_pixel_put(mlx, win, j, j, (mlx_color){ .rgba = 0x0000FFFF + (color << 24) });
-		mlx_pixel_put(mlx, win, 399 - j, j, (mlx_color){ .rgba = 0x0000FFFF });
-		color += (color < 255);
-	}
-
 	RenderData data = { 0 };
 	data.renderpass = renderpass;
 	data.mlx = mlx;
