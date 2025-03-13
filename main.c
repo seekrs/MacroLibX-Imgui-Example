@@ -12,6 +12,7 @@ typedef struct RenderData
 {
 	VkRenderPass renderpass;
 	VkFramebuffer* framebuffers;
+	VkExtent2D swapchain_extent;
 	mlx_context mlx;
 	mlx_window win;
 	mlx_image img;
@@ -20,6 +21,16 @@ typedef struct RenderData
 void VulkanRender(VkCommandBuffer cmd, void* param)
 {
 	RenderData* data = (RenderData*)param;
+
+	VkExtent2D swapchain_extent = GetMlxFuncs()->mlx_get_vk_swapchain_extent(data->mlx, data->win);
+	if(data->swapchain_extent.width != swapchain_extent.width || data->swapchain_extent.height != swapchain_extent.height)
+	{
+		data->swapchain_extent = swapchain_extent;
+		VulkanDestroyFramebuffers(data->mlx, data->win, data->framebuffers);
+		GetVulkanFuncs()->vkDestroyRenderPass(GetMlxFuncs()->mlx_get_vk_device(data->mlx), data->renderpass, NULL);
+		data->renderpass = VulkanCreateRenderPass(data->mlx, data->win);
+		data->framebuffers = VulkanCreateFramebuffers(data->mlx, data->win, data->renderpass);
+	}
 
 	ImGui_ImplVulkan_NewFrame();
 	ImGui_ImplSDL2_NewFrame();
@@ -34,8 +45,8 @@ void VulkanRender(VkCommandBuffer cmd, void* param)
 	info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 	info.renderPass = data->renderpass;
 	info.framebuffer = data->framebuffers[GetMlxFuncs()->mlx_get_current_vk_swapchain_image_index(data->mlx, data->win)];
-	info.renderArea.extent.width = GetMlxFuncs()->mlx_get_vk_swapchain_extent(data->mlx, data->win).width;
-	info.renderArea.extent.height = GetMlxFuncs()->mlx_get_vk_swapchain_extent(data->mlx, data->win).height;
+	info.renderArea.extent.width = swapchain_extent.width;
+	info.renderArea.extent.height = swapchain_extent.height;
 	GetVulkanFuncs()->vkCmdBeginRenderPass(cmd, &info, VK_SUBPASS_CONTENTS_INLINE);
 
 	ImGui_ImplVulkan_RenderDrawData(draw_data, cmd, VK_NULL_HANDLE);
@@ -82,7 +93,7 @@ int main(void)
 	info.title = "MLX Window";
 	info.width = 1250;
 	info.height = 720;
-	info.is_resizable = false;
+	info.is_resizable = true;
 	mlx_window win = mlx_new_window(mlx, &info);
 
 	LoadMlxBindings(mlx, GetMlxFuncs());
@@ -126,17 +137,14 @@ int main(void)
 	data.mlx = mlx;
 	data.win = win;
 	data.framebuffers = framebuffers;
+	data.swapchain_extent = GetMlxFuncs()->mlx_get_vk_swapchain_extent(mlx, win);
 	data.img = mlx_new_image_from_file(mlx, "MacroLibX/example/42_logo.png", NULL, NULL);
 
 	mlx_add_loop_hook(mlx, MlxRender, &data);
 	GetMlxFuncs()->mlx_add_pre_render_hook(mlx, win, VulkanRender, &data);
 	mlx_loop(mlx);
 
-	GetVulkanFuncs()->vkDeviceWaitIdle(device);
-
-	for(int i = 0; i < GetMlxFuncs()->mlx_get_vk_swapchain_image_count(mlx, win); i++)
-		GetVulkanFuncs()->vkDestroyFramebuffer(device, framebuffers[i], NULL);
-	free(framebuffers);
+	VulkanDestroyFramebuffers(mlx, win, framebuffers);
 
 	ImGui_ImplVulkan_Shutdown();
 	ImGui_ImplSDL2_Shutdown();

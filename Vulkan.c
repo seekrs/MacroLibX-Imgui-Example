@@ -81,3 +81,12 @@ VkFramebuffer* VulkanCreateFramebuffers(mlx_context mlx, mlx_window win, VkRende
 	}
 	return framebuffers;
 }
+
+void VulkanDestroyFramebuffers(mlx_context mlx, mlx_window win, VkFramebuffer* framebuffers)
+{
+	VkDevice device = GetMlxFuncs()->mlx_get_vk_device(mlx);
+	GetVulkanFuncs()->vkDeviceWaitIdle(device);
+	for(int i = 0; i < GetMlxFuncs()->mlx_get_vk_swapchain_image_count(mlx, win); i++)
+		GetVulkanFuncs()->vkDestroyFramebuffer(device, framebuffers[i], NULL);
+	free(framebuffers);
+}

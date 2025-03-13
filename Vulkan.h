@@ -8,5 +8,6 @@
 VkDescriptorPool VulkanCreateDescriptorPool(mlx_context mlx);
 VkRenderPass VulkanCreateRenderPass(mlx_context mlx, mlx_window win);
 VkFramebuffer* VulkanCreateFramebuffers(mlx_context mlx, mlx_window win, VkRenderPass renderpass);
+void VulkanDestroyFramebuffers(mlx_context mlx, mlx_window win, VkFramebuffer* framebuffers);
 
 #endif
