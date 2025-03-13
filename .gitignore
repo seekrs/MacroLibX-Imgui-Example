@@ -19,4 +19,5 @@
 *.gdb_history
 objs/
 mlx_imgui
+.cache/
 *.ini
