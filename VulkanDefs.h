@@ -2,15 +2,12 @@
 
 #ifdef VK_VERSION_1_0
 	#ifdef VULKAN_GLOBAL_FUNCTION
-		VULKAN_GLOBAL_FUNCTION(vkCreateInstance)
 		VULKAN_GLOBAL_FUNCTION(vkEnumerateInstanceExtensionProperties)
 		VULKAN_GLOBAL_FUNCTION(vkEnumerateInstanceLayerProperties)
 		VULKAN_GLOBAL_FUNCTION(vkGetInstanceProcAddr)
 	#endif
 
 	#ifdef VULKAN_INSTANCE_FUNCTION
-		VULKAN_INSTANCE_FUNCTION(vkCreateDevice)
-		VULKAN_INSTANCE_FUNCTION(vkDestroyInstance)
 		VULKAN_INSTANCE_FUNCTION(vkEnumerateDeviceExtensionProperties)
 		VULKAN_INSTANCE_FUNCTION(vkEnumeratePhysicalDevices)
 		VULKAN_INSTANCE_FUNCTION(vkGetDeviceProcAddr)
@@ -20,12 +17,6 @@
 		VULKAN_INSTANCE_FUNCTION(vkGetPhysicalDeviceMemoryProperties)
 		VULKAN_INSTANCE_FUNCTION(vkGetPhysicalDeviceProperties)
 		VULKAN_INSTANCE_FUNCTION(vkGetPhysicalDeviceQueueFamilyProperties)
-		#ifdef DEBUG
-			#ifdef VK_EXT_debug_utils
-				VULKAN_INSTANCE_FUNCTION(vkSetDebugUtilsObjectNameEXT)
-				//VULKAN_INSTANCE_FUNCTION(vkSetDebugUtilsObjectTagEXT)
-			#endif
-		#endif
 	#endif
 
 	#ifdef VULKAN_DEVICE_FUNCTION
@@ -107,22 +98,11 @@
 		VULKAN_DEVICE_FUNCTION(vkWaitForFences)
 	#endif
 #endif
-#ifdef VK_KHR_swapchain
-	#ifdef VULKAN_DEVICE_FUNCTION
-		VULKAN_DEVICE_FUNCTION(vkAcquireNextImageKHR)
-		VULKAN_DEVICE_FUNCTION(vkCreateSwapchainKHR)
-		VULKAN_DEVICE_FUNCTION(vkDestroySwapchainKHR)
-		VULKAN_DEVICE_FUNCTION(vkGetSwapchainImagesKHR)
-		VULKAN_DEVICE_FUNCTION(vkQueuePresentKHR)
-	#endif
-#endif
 #ifdef VK_KHR_surface
 	#ifdef VULKAN_INSTANCE_FUNCTION
-		VULKAN_INSTANCE_FUNCTION(vkDestroySurfaceKHR)
 		VULKAN_INSTANCE_FUNCTION(vkGetPhysicalDeviceSurfaceCapabilitiesKHR)
 		VULKAN_INSTANCE_FUNCTION(vkGetPhysicalDeviceSurfaceFormatsKHR)
 		VULKAN_INSTANCE_FUNCTION(vkGetPhysicalDeviceSurfacePresentModesKHR)
 		VULKAN_INSTANCE_FUNCTION(vkGetPhysicalDeviceSurfaceSupportKHR)
 	#endif
 #endif
-

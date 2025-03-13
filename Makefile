@@ -1,12 +1,12 @@
 NAME = ./mlx_imgui
 
-SRCS = main.c
+SRCS = main.c Loader.c Vulkan.c
 
 OBJ_DIR	= objs
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 
 CC = clang
-CFLAGS = -I MacroLibX/includes -g3 -D IMGUI_IMPL_VULKAN_NO_PROTOTYPES -D CIMGUI_USE_VULKAN -D CIMGUI_USE_SDL2
+CFLAGS = -I MacroLibX/includes -g3 -D VULKAN_NO_PROTOTYPES -D IMGUI_IMPL_VULKAN_NO_PROTOTYPES -D CIMGUI_USE_VULKAN -D CIMGUI_USE_SDL2
 CLIBS = cimgui/cimgui.so MacroLibX/libmlx.so -lSDL2
 
 RM = rm -rf
